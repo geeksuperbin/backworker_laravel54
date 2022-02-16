@@ -4,20 +4,39 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+
+// 使用ORM
+use App\ToDoList;
+use App\WhyStop;
+
 class TodoController extends Controller{
 
     //// 获取TODO任务列表
     //Route::get('todo', 'TodoController@getToDoList');
     public function getToDoList(){
-        echo "getToDoList";
+        $todoLists = ToDoList::all();
+
+        foreach ($todoLists as $todoList) {
+            echo $todoList->list_name;
+        }
     }
 
 
     //// 添加一条TODO任务
     //Route::post('todo','TodoController@insertToDoTask');
     public function insertToDoTask(Request $resquest){
-        dump($resquest->todo);
-        echo "insertToDoTask";
+        $listName = $resquest->list_name;
+        $a = ToDoList::insert([
+            "id"=>uuid2(),
+            "list_name"=>$listName,
+            "status"=> 1, // 1 是未开始、2表示进行中 3 表示暂停 4 表示结束
+            "spend_time" =>0, // 单位是分钟
+            "stop_count"=>0,
+            "created_at"=> date('Y-m-d H:i:s'),
+        ]);
+        
+        return $this->returnInfo(["info"=>"任务添加成功"]);        
+
     }
 
     //// 删除一条TODO任务
