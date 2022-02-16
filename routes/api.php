@@ -28,3 +28,20 @@ Route::get('fei', 'FeiController@index');
 Route::get('/hello',function(){
     return 'world';
 });
+
+// 获取TODO任务列表
+Route::get('todo', 'TodoController@getToDoList');
+// 添加一条TODO任务
+Route::post('todo','TodoController@insertToDoTask');
+// 删除一条TODO任务
+Route::delete('todo/{uuid}','TodoController@deleteToDoTask');
+// 修改一条TODO任务
+Route::put('todo/{uuid}','TodoController@editToDoTask');
+// 开始一条TODO任务
+Route::get('todo/start/{uuid}', 'TodoController@startToDoTask');
+// 挂起一条TODO任务
+Route::get('todo/break/{uuid}', 'TodoController@breakToDoTask');
+// 继续一条TODO任务
+Route::get('todo/continue/{uuid}', 'TodoController@continueToDoTask');
+// 完成一条TODO任务
+Route::get('todo/done/{uuid}', 'TodoController@doneToDoTask');
