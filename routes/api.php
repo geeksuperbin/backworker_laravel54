@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 // });
 
 
-Route::get('fei', 'Api\FeiController@index');
+Route::get('fei', 'FeiController@index');
 
 
 // 192.168.0.222:9999/api/hello
