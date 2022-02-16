@@ -16,6 +16,15 @@ use Illuminate\Http\Request;
 | 被分配了“api”中间件组。 享受构建您的 API 的乐趣！
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+Route::get('fei', 'Api\FeiController@index');
+
+
+// 192.168.0.222:9999/api/hello
+Route::get('/hello',function(){
+    return 'world';
 });
