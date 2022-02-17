@@ -15,8 +15,19 @@ class TodoController extends Controller{
     //Route::get('todo', 'TodoController@getToDoList');
     public function getToDoList(){
         $todoLists = ToDoList::all();
-        dd($todoLists);
-  
+
+        // 元素个数
+        $num = count($todoLists);
+        // 转化为json
+        // $data = $todoLists->toJson();
+        
+        // json 校验：https://www.bejson.com/explore/index_new/
+        return $this->returnInfo([
+            "total"=>$num,
+            "items"=>$todoLists
+        ]);        
+
+      
     }
 
 
