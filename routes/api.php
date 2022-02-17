@@ -45,3 +45,16 @@ Route::get('todo/break/{uuid}', 'TodoController@breakToDoTask');
 Route::get('todo/continue/{uuid}', 'TodoController@continueToDoTask');
 // 完成一条TODO任务
 Route::get('todo/done/{uuid}', 'TodoController@doneToDoTask');
+
+
+// 登录
+Route::post('user/login', 'UserController@login');
+// 获取 token
+// /user/info?token=admin-token
+Route::get('/user/info', 'UserController@getToken');
+// Route::post('/user/info', 'UserController@getToken');
+
+// 退出
+Route::post('/user/logout', 'UserController@logout');
+
+

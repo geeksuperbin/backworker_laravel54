@@ -15,10 +15,8 @@ class TodoController extends Controller{
     //Route::get('todo', 'TodoController@getToDoList');
     public function getToDoList(){
         $todoLists = ToDoList::all();
-
-        foreach ($todoLists as $todoList) {
-            echo $todoList->list_name;
-        }
+        dd($todoLists);
+  
     }
 
 
