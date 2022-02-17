@@ -23,6 +23,7 @@ class TodoController extends Controller{
     //// 添加一条TODO任务
     //Route::post('todo','TodoController@insertToDoTask');
     public function insertToDoTask(Request $resquest){
+        // dd($resquest->all());
         $listName = $resquest->list_name;
         $a = ToDoList::insert([
             "id"=>uuid2(),

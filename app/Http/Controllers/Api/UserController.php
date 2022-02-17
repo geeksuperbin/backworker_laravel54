@@ -30,6 +30,7 @@ class UserController extends Controller{
 	public function logout(){
 
 		return '{"code":20000,"data":"success"}';
+		// {"code":"20000","data":{"info":"\u4efb\u52a1\u6dfb\u52a0\u6210\u529f"}}
 
 	}
 

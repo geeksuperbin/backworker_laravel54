@@ -18,7 +18,7 @@ class Controller extends BaseController
      * @param $data
      * @return mixed
      */
-    protected function returnInfo($data = null,$code='20000')
+    protected function returnInfo($data = null,$code=20000)
     {
         $arr = array(
             'code' => $code,
