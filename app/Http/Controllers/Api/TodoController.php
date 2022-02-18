@@ -125,14 +125,15 @@ class TodoController extends Controller{
     //// 开始一条TODO任务
     //Route::get('todo/start/{uuid}', 'TodoController@startToDoTask');
     public function startToDoTask($uuid){
-        $starTime = ToDoList::where("id",$uuid)
+        $status = ToDoList::where("id",$uuid)
                     ->get()
-                    ->first()
-                    ->start_time;
+                    ->first();
 
-        // dd($starTime);
+        $starTime = $status->start_time;
+        $complete_time = $status->complete_time;
 
-        if(!$starTime){
+
+        if(!$starTime && !$complete_time){
             // dd(111);
 
             $updateStatus = ToDoList::where("id",$uuid)
@@ -147,7 +148,7 @@ class TodoController extends Controller{
         }else{
             // dd(222);
 
-            return $this->returnInfo(["info"=>"任务已经开始了，不要再点了"]);  
+            return $this->returnInfo(["info"=>"不起作用的，不要再点了"]);  
         }
 
         // echo "startToDoTask";
@@ -169,7 +170,24 @@ class TodoController extends Controller{
     //// 完成一条TODO任务
     //Route::get('todo/done/{uuid}', 'TodoController@doneToDoTask');
     public function doneToDoTask($uuid){
-        echo "doneToDoTask";
+        $res = ToDoList::where("id",$uuid)
+            ->get()
+            ->first()
+            ->complete_time;
+
+        if(!$res){
+            $updateStatus = ToDoList::where("id",$uuid)
+                ->update([
+                    'status'=>4, // 表示结束
+                    'complete_time'=>date('Y-m-d H:i:s'),
+                    'updated_at'=>date('Y-m-d H:i:s')
+                ]);
+
+            return $this->returnInfo(["info"=>"完成任务Done！！！！"]);
+        }else{
+            return $this->returnInfo(["info"=>"没有任务了！！！！"]);
+
+        }
     }
 
 
