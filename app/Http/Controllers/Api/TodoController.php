@@ -39,6 +39,8 @@ class TodoController extends Controller{
     }
 
     // 统计任务分钟用时
+    // 注意挂起的任务不继续统计时间
+    
     public  function spendTime(){
 
         $todoLists = ToDoList::all();
