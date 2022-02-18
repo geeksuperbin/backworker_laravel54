@@ -21,13 +21,13 @@ use Illuminate\Http\Request;
 // });
 
 
-Route::get('fei', 'FeiController@index');
+// Route::get('fei', 'FeiController@index');
 
 
-// 192.168.0.222:9999/api/hello
-Route::get('/hello',function(){
-    return 'world';
-});
+// // 192.168.0.222:9999/api/hello
+// Route::get('/hello',function(){
+//     return 'world';
+// });
 
 // 获取TODO任务列表
 Route::get('todo', 'TodoController@getToDoList');

@@ -14,7 +14,15 @@ class TodoController extends Controller{
     //// 获取TODO任务列表
     //Route::get('todo', 'TodoController@getToDoList');
     public function getToDoList(){
-        $todoLists = ToDoList::all();
+
+        // 任务花费时间统计
+        $this->spendTime();
+
+        // $todoLists = ToDoList::all();
+
+        // 排除软删除的元素
+        $todoLists = ToDoList::where("deleted_at",'=',null)->get();
+
 
         // 元素个数
         $num = count($todoLists);
@@ -28,6 +36,44 @@ class TodoController extends Controller{
         ]);        
 
       
+    }
+
+    // 统计任务分钟用时
+    public  function spendTime(){
+
+        $todoLists = ToDoList::all();
+
+        // 计算任务分钟用时
+
+        $collectionData = $todoLists->reject(function ($item) {
+            return $item->start_time == false || $item->complete_time != false || $item->deleted_at != false ; // 过滤掉没有start_time 值的集合元素,或者清单任务完成的项,或者已删除的
+        })
+        ->map(function ($item) {
+
+            $nowDate = date('Y-m-d H:i:s');
+            
+            return 
+            [
+
+                    $item->id, // 任务id
+                    $item->start_time, // 开始时间
+                    floor((strtotime($nowDate)-strtotime($item->start_time))%86400/60) // 
+            ]; // 返回带有 start_time 的 item 集合项
+        });
+
+        // 批量更新任务
+        foreach ($collectionData as $data) {
+            $uuid = $data[0];
+            $start_time = $data[1];
+            $spend_time = $data[2];
+
+            ToDoList::where("id",$uuid)
+                ->update([
+                    'spend_time'=>$spend_time
+                ]);
+        }
+
+
     }
 
 
@@ -52,7 +98,12 @@ class TodoController extends Controller{
     //// 删除一条TODO任务
     //Route::delete('todo/{uuid}','TodoController@deleteToDoTask');
     public function deleteToDoTask($uuid){
-        echo "deleteToDoTask";
+        ToDoList::where("id",$uuid)
+            ->update([
+                'deleted_at'=>date('Y-m-d H:i:s')
+            ]);
+        // echo "deleteToDoTask";
+        return $this->returnInfo(["info"=>"任务删除成功"]);
     }
 
 
@@ -66,7 +117,32 @@ class TodoController extends Controller{
     //// 开始一条TODO任务
     //Route::get('todo/start/{uuid}', 'TodoController@startToDoTask');
     public function startToDoTask($uuid){
-        echo "startToDoTask";
+        $starTime = ToDoList::where("id",$uuid)
+                    ->get()
+                    ->first()
+                    ->start_time;
+
+        // dd($starTime);
+
+        if(!$starTime){
+            // dd(111);
+
+            $updateStatus = ToDoList::where("id",$uuid)
+                ->update([
+                    'status'=>2, // 表示开始
+                    'start_time'=>date('Y-m-d H:i:s'),
+                    'updated_at'=>date('Y-m-d H:i:s')
+                ]);
+
+            return $this->returnInfo(["info"=>"开始愉快的工作了"]);
+
+        }else{
+            // dd(222);
+
+            return $this->returnInfo(["info"=>"任务已经开始了，不要再点了"]);  
+        }
+
+        // echo "startToDoTask";
     }
 
     //// 挂起一条TODO任务
