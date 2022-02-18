@@ -43,7 +43,7 @@ class TodoController extends Controller{
 
     public  function spendTime(){
 
-        $todoLists = ToDoList::all();
+        $todoLists = ToDoList::where('status','=','2')->get();
 
         // 计算任务分钟用时
 
