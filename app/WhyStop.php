@@ -2,7 +2,8 @@
 
 namespace App;
 
-use Illumindate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
+
 
 
 class WhyStop  extends  Model

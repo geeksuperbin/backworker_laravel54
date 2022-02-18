@@ -40,7 +40,7 @@ Route::put('todo/{uuid}','TodoController@editToDoTask');
 // 开始一条TODO任务
 Route::get('todo/start/{uuid}', 'TodoController@startToDoTask');
 // 挂起一条TODO任务
-Route::get('todo/break/{uuid}', 'TodoController@breakToDoTask');
+Route::put('todo/break/{uuid}', 'TodoController@breakToDoTask');
 // 继续一条TODO任务
 Route::get('todo/continue/{uuid}', 'TodoController@continueToDoTask');
 // 完成一条TODO任务

@@ -40,7 +40,7 @@ class TodoController extends Controller{
 
     // 统计任务分钟用时
     // 注意挂起的任务不继续统计时间
-    
+
     public  function spendTime(){
 
         $todoLists = ToDoList::all();
@@ -158,15 +158,76 @@ class TodoController extends Controller{
 
     //// 挂起一条TODO任务
     //Route::get('todo/break/{uuid}', 'TodoController@breakToDoTask');
-    public function breakToDoTask($uuid){
-        echo "breakToDoTask";
+    public function breakToDoTask($uuid, Request $resquest){
+        // echo "breakToDoTask";
+        $reason = $resquest->reason; // 中断理由
+
+        // 查看当前任务的状态能否中断，即 status 仅为 2 - 进行的情况可以中断   
+
+        $statusId = ToDoList::where("id",$uuid)
+            ->get()
+            ->first()
+            ->status;
+
+        if($statusId == 2){
+            // 可以进行中断操作
+            WhyStop::insert([
+                'list_id'=>$uuid,
+                'why_stop'=>$reason,
+                'stop_start_time'=>date('Y-m-d H:i:s')
+            ]);
+
+            ToDoList::where("id",$uuid)
+                ->update([
+                    'status'=>3, // 表示暂停
+                    'updated_at'=>date('Y-m-d H:i:s')
+                ]);
+
+            return $this->returnInfo(["info"=>"中断成功，干其他事去吧，别拖延纳"]);
+
+        }else{
+            return $this->returnInfo(["info"=>"中断不了，无能为力"]);
+
+        }    
+            
+        // dump($statusId);
+        // dump($uuid);
 
     }
 
     //// 继续一条TODO任务
     //Route::get('todo/continue/{uuid}', 'TodoController@continueToDoTask');
     public function continueToDoTask($uuid){
-        echo "continueToDoTask";
+        // echo "continueToDoTask";
+        // dd($uuid);
+        $statusId = ToDoList::where("id",$uuid)
+            ->get()
+            ->first()
+            ->status;
+
+        if($statusId == 3){
+            // 可以进行继续操作
+            $id = WhyStop::where("list_id",$uuid)->orderBy('id','desc')->get()->first()->id;
+
+            WhyStop::where("id",$id)->update([
+                "stop_stop_time"=>date('Y-m-d H:i:s')
+            ]);
+
+
+            ToDoList::where("id",$uuid)
+                ->update([
+                    'status'=>2, // 表示可再继续
+                    'updated_at'=>date('Y-m-d H:i:s')
+                ]);
+
+            return $this->returnInfo(["info"=>"欢迎回来"]);
+
+        }else{
+            return $this->returnInfo(["info"=>"回来不了了，恢复异常，滋滋~"]);
+
+        }  
+
+
     }
 
     //// 完成一条TODO任务
