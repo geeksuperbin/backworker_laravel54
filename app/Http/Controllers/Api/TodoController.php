@@ -21,7 +21,7 @@ class TodoController extends Controller{
         // $todoLists = ToDoList::all();
 
         // 排除软删除的元素
-        $todoLists = ToDoList::where("deleted_at",'=',null)->get();
+        $todoLists = ToDoList::where("deleted_at",'=',null)->orderBy('start_time', 'desc')->get();
 
 
         // 元素个数
@@ -110,8 +110,16 @@ class TodoController extends Controller{
     //// 修改一条TODO任务
     //Route::put('todo/{uuid}','TodoController@editToDoTask');
     public function editToDoTask(Request $request, $uuid){
-        dump($request->todo);
-        echo "editToDoTask";
+        // dump($request->todo);
+        // echo "editToDoTask";
+
+        ToDoList::where("id",$uuid)
+            ->update([
+                'list_name'=>$request->todo,
+                'updated_at'=>date('Y-m-d H:i:s')
+            ]);
+        // echo "deleteToDoTask";
+        return $this->returnInfo(["info"=>"任务名修改成功"]);
     }
 
     //// 开始一条TODO任务
